@@ -108,6 +108,7 @@ def logout():
     session.pop('user', None)
     return jsonify({"success": True})
 
+# --- ADMIN ADD ROUTES ---
 @app.route('/api/admin/add-subject', methods=['POST'])
 def add_subject():
     user = session.get('user')
@@ -160,6 +161,25 @@ def add_video():
     db["videos"].append(new_video)
     save_data(db)
     return jsonify({"success": True, "videos": db["videos"]})
+
+# --- ADMIN DELETE ROUTES ---
+@app.route('/api/admin/delete-item', methods=['POST'])
+def delete_item():
+    user = session.get('user')
+    if not user or not user.get('is_admin'):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    data = request.json
+    item_type = data.get("type") # "videos", "quizzes", or "subjects"
+    item_id = int(data.get("id"))
+
+    db = load_data()
+    if item_type in db:
+        db[item_type] = [item for item in db[item_type] if item.get("id") != item_id]
+        save_data(db)
+        return jsonify({"success": True})
+    
+    return jsonify({"success": False, "message": "Invalid type"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
