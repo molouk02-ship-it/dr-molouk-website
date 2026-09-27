@@ -1,262 +1,319 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Molouk's Medicine Courses</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --bg-main: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --text-sub: #64748b;
-            --primary: #0284c7;
-            --border: #e2e8f0;
-        }
-
-        [data-theme="dark"] {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --primary: #38bdf8;
-            --border: #334155;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.2s, color 0.2s; }
-        body { background: var(--bg-main); color: var(--text-main); }
-
-        /* Modal Pop-up */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 999; }
-        .modal { background: var(--bg-card); padding: 2rem; border-radius: 16px; max-width: 800px; width: 90%; text-align: center; }
-        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-        .plan-box { border: 2px solid var(--primary); padding: 1.2rem; border-radius: 12px; background: var(--bg-main); }
-        .price { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin: 0.5rem 0; }
-        .btn { background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 1rem; }
-
-        /* Nav Header */
-        nav { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 700; font-size: 1.2rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        .logo img { height: 35px; border-radius: 4px; }
-
-        /* Layout */
-        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-        .year-bar { background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border); text-align: center; margin-bottom: 1.5rem; }
-        .year-btn { padding: 0.4rem 1rem; margin: 0.2rem; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .year-btn.active { background: var(--primary); color: white; }
-
-        /* Navigation Tabs */
-        .tabs { display: flex; gap: 10px; overflow-x: auto; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
-        .tab-btn { padding: 0.6rem 1rem; background: none; border: none; color: var(--text-sub); font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-
-        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-        
-        footer { background: var(--bg-card); border-top: 1px solid var(--border); text-align: center; padding: 1.5rem; margin-top: 3rem; color: var(--text-sub); }
-        footer a { color: var(--primary); text-decoration: none; }
+        :root { --primary: #0056b3; --accent: #28a745; --bg: #f4f6f9; --text: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); }
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .hidden { display: none !important; }
+        input, select, button { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { opacity: 0.9; }
+        .auth-toggle { text-align: center; color: var(--primary); cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 10px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .quiz-opt { text-align: left; background: #e9ecef; color: #333; margin: 5px 0; }
+        .quiz-opt:hover { background: #ced4da; }
     </style>
 </head>
 <body>
 
-    <!-- Subscription Modal -->
-    <div class="modal-bg" id="subModal">
-        <div class="modal">
-            <h2><i class="fa-solid fa-graduation-cap"></i> Dr. Molouk's Medicine Courses</h2>
-            <p style="color: var(--text-sub);">Select a course plan to enter. All plans are currently free!</p>
-            <div class="plan-grid">
-                <div class="plan-box">
-                    <h3>Basic Medical</h3>
-                    <div class="price">$0.00</div>
-                    <p style="font-size:0.85rem;">Access to video lectures & frequent quizzes.</p>
-                    <button class="btn" onclick="closeModal()">Select Plan</button>
-                </div>
-                <div class="plan-box">
-                    <h3>Pro Clinical</h3>
-                    <div class="price">$0.00</div>
-                    <p style="font-size:0.85rem;">Includes Case Studies & Anki Flashcard Decks.</p>
-                    <button class="btn" onclick="closeModal()">Select Plan</button>
-                </div>
-                <div class="plan-box">
-                    <h3>Ultimate Board</h3>
-                    <div class="price">$0.00</div>
-                    <p style="font-size:0.85rem;">Full access to Question Banks & Ask Dr. Molouk forum.</p>
-                    <button class="btn" onclick="closeModal()">Select Plan</button>
-                </div>
-            </div>
+<header>
+    <h2>Dr. Molouk's Medicine Courses</h2>
+    <div id="user-nav">
+        <span id="user-greeting"></span>
+        <button id="logout-btn" onclick="logout()" class="hidden" style="width: auto; display: inline-block;">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- AUTHENTICATION CARDS -->
+    <div id="auth-section">
+        <!-- LOGIN -->
+        <div id="login-card" class="card">
+            <h3>Login</h3>
+            <input type="email" id="login-email" placeholder="Email (Admin: molouk08@hotmail.com)">
+            <input type="password" id="login-pass" placeholder="Password">
+            <button onclick="login()">Sign In</button>
+            <p class="auth-toggle" onclick="showAuth('register')">Need an account? Register here</p>
+            <p class="auth-toggle" onclick="showAuth('reset')">Forgot Password?</p>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="register-card" class="card hidden">
+            <h3>Register Student Account</h3>
+            <input type="text" id="reg-name" placeholder="Full Name">
+            <input type="email" id="reg-email" placeholder="Email">
+            <input type="password" id="reg-pass" placeholder="Password">
+            <input type="text" id="reg-pin" placeholder="4-Digit Security PIN (For Password Reset)" maxlength="4">
+            <button onclick="register()">Create Account</button>
+            <p class="auth-toggle" onclick="showAuth('login')">Already registered? Sign In</p>
+        </div>
+
+        <!-- RESET PASSWORD -->
+        <div id="reset-card" class="card hidden">
+            <h3>Reset Password</h3>
+            <input type="email" id="reset-email" placeholder="Your Registered Email">
+            <input type="text" id="reset-pin" placeholder="Your 4-Digit Security PIN">
+            <input type="password" id="reset-new-pass" placeholder="New Password">
+            <button onclick="resetPassword()">Update Password</button>
+            <p class="auth-toggle" onclick="showAuth('login')">Back to Login</p>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">
-            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-            <span><i class="fa-solid fa-user-doctor"></i> Dr. Molouk's Medicine Courses</span>
-        </div>
-        <div>
-            <button onclick="toggleTheme()" style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--text-main); margin-right:1rem;"><i class="fa-solid fa-moon" id="tIcon"></i></button>
-            <span style="font-size:0.85rem; font-weight:600;"><i class="fa-solid fa-shield-halved"></i> Admin Secured</span>
-        </div>
-    </nav>
+    <!-- MAIN PLATFORM CONTENT -->
+    <div id="platform-section" class="hidden">
 
-    <div class="container">
+        <!-- ADMIN CONTROLS (Only visible to molouk08@hotmail.com) -->
+        <div id="admin-panel" class="card hidden" style="border: 2px solid #dc3545;">
+            <h3 style="color: #dc3545;">Admin Control Center</h3>
+            
+            <!-- Create Subject -->
+            <details>
+                <summary><b>+ Add New Subject</b></summary>
+                <input type="text" id="subj-name" placeholder="Subject Name (e.g. Anatomy)">
+                <input type="text" id="subj-year" placeholder="Academic Year (e.g. Year 1)">
+                <button onclick="addSubject()">Save Subject</button>
+            </details>
 
-        <!-- Year Selector Gatekeeper -->
-        <div class="year-bar">
-            <strong>Filter Academic Year: </strong>
-            <button class="year-btn active" onclick="filterYear('1st', this)">1st Year</button>
-            <button class="year-btn" onclick="filterYear('2nd', this)">2nd Year</button>
-            <button class="year-btn" onclick="filterYear('3rd', this)">3rd Year</button>
-            <button class="year-btn" onclick="filterYear('4th', this)">4th Year</button>
-            <button class="year-btn" onclick="filterYear('5th', this)">5th Year</button>
-        </div>
+            <!-- Add Video -->
+            <details style="margin-top: 10px;">
+                <summary><b>+ Upload Video Link</b></summary>
+                <select id="video-subj-select"></select>
+                <input type="text" id="video-title" placeholder="Video Title">
+                <input type="text" id="video-url" placeholder="Video Embed URL (e.g. https://www.youtube.com/embed/...)">
+                <button onclick="addVideo()">Publish Video</button>
+            </details>
 
-        <!-- Navigation Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('videos')"><i class="fa-solid fa-video"></i> Subjects & Videos</button>
-            <button class="tab-btn" onclick="switchTab('quizzes')"><i class="fa-solid fa-pen-to-square"></i> Quizzes & Question Banks</button>
-            <button class="tab-btn" onclick="switchTab('flashcards')"><i class="fa-solid fa-clone"></i> Anki Flashcards</button>
-            <button class="tab-btn" onclick="switchTab('cases')"><i class="fa-solid fa-notes-medical"></i> Clinical Cases</button>
-            <button class="tab-btn" onclick="switchTab('calendar')"><i class="fa-solid fa-calendar-check"></i> Task Calendar</button>
-            <button class="tab-btn" onclick="switchTab('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard & Stats</button>
-            <button class="tab-btn" onclick="switchTab('forum')"><i class="fa-solid fa-comments"></i> Ask Dr. Molouk</button>
-        </div>
-
-        <!-- TAB: VIDEOS -->
-        <div id="tab-videos" class="tab-sec">
-            <div class="grid-2">
-                {% for course in courses %}
-                <div class="card course-card" data-year="{{ course.year }}">
-                    <span style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 8px; border-radius:4px;">{{ course.year }} Year</span>
-                    <h3 style="margin-top:5px;">{{ course.subject }}: {{ course.title }}</h3>
-                    <iframe style="width:100%; height:200px; margin-top:10px; border-radius:8px; border:none;" src="{{ course.video_url }}"></iframe>
-                </div>
-                {% endfor %}
-            </div>
+            <!-- Add Quiz -->
+            <details style="margin-top: 10px;">
+                <summary><b>+ Create Quiz</b></summary>
+                <select id="quiz-subj-select"></select>
+                <input type="text" id="quiz-title" placeholder="Quiz Title">
+                <p><i>Add Question 1:</i></p>
+                <input type="text" id="q1-text" placeholder="Question Text">
+                <input type="text" id="q1-a" placeholder="Option A">
+                <input type="text" id="q1-b" placeholder="Option B">
+                <input type="text" id="q1-c" placeholder="Option C">
+                <input type="text" id="q1-d" placeholder="Option D">
+                <select id="q1-correct">
+                    <option value="0">Correct: Option A</option>
+                    <option value="1">Correct: Option B</option>
+                    <option value="2">Correct: Option C</option>
+                    <option value="3">Correct: Option D</option>
+                </select>
+                <button onclick="addQuiz()">Publish Quiz</button>
+            </details>
         </div>
 
-        <!-- TAB: QUIZZES -->
-        <div id="tab-quizzes" class="tab-sec" style="display:none;">
-            <div class="card">
-                <h3><i class="fa-solid fa-list-check"></i> High-Yield MCQ & True/False Quiz</h3>
-                <p style="color:var(--text-sub); margin-bottom:1rem;">Solve and submit to earn points on the leaderboard!</p>
-                <p><strong>Q1: Which medication is classified as an ACE Inhibitor?</strong></p>
-                <div style="margin-top:10px;">
-                    <button class="btn" style="background:var(--bg-main); color:var(--text-main); border:1px solid var(--border); text-align:left;" onclick="submitQuiz(10)">A) Lisinopril (Correct)</button>
-                    <button class="btn" style="background:var(--bg-main); color:var(--text-main); border:1px solid var(--border); text-align:left; margin-top:5px;" onclick="submitQuiz(0)">B) Metformin</button>
-                </div>
-            </div>
+        <!-- SUBJECTS & CONTENT DISPLAY -->
+        <div class="card">
+            <h3>Available Subjects</h3>
+            <div id="subjects-grid" class="grid"></div>
         </div>
 
-        <!-- TAB: FLASHCARDS -->
-        <div id="tab-flashcards" class="tab-sec" style="display:none;">
-            <div class="card" style="text-align:center; padding:3rem;">
-                <h3 id="cardText">Front: What is the mechanism of action of Heparin?</h3>
-                <button class="btn" style="width:auto; margin-top:1rem;" onclick="document.getElementById('cardText').innerText = 'Back: Binds to Antithrombin III to inhibit Thrombin and Factor Xa.'">Flip Card</button>
-            </div>
+        <!-- VIDEOS VIEW -->
+        <div class="card">
+            <h3>Course Videos</h3>
+            <div id="videos-list"></div>
         </div>
 
-        <!-- TAB: CASES -->
-        <div id="tab-cases" class="tab-sec" style="display:none;">
-            <div class="card">
-                <h3><i class="fa-solid fa-stethoscope"></i> Clinical Scenario #01</h3>
-                <p style="margin-top:10px;">A 60-year-old female presents with fatigue and shortness of breath. Hemoglobin is 8.5 g/dL...</p>
-                <button class="btn" style="width:auto; margin-top:10px;" onclick="alert('Order Serum Ferritin & Iron Panel!')">View Next Step</button>
-            </div>
+        <!-- QUIZZES VIEW -->
+        <div class="card">
+            <h3>Interactive Quizzes</h3>
+            <div id="quizzes-list"></div>
         </div>
-
-        <!-- TAB: CALENDAR -->
-        <div id="tab-calendar" class="tab-sec" style="display:none;">
-            <div class="card">
-                <h3>Study Planner</h3>
-                <input type="text" id="tInput" placeholder="Add study task..." style="padding:0.5rem; width:70%; border-radius:6px; border:1px solid var(--border);">
-                <button class="btn" style="width:auto;" onclick="addTask()">Add</button>
-                <ul id="tList" style="margin-top:1rem; padding-left:1.5rem;"></ul>
-            </div>
-        </div>
-
-        <!-- TAB: LEADERBOARD -->
-        <div id="tab-leaderboard" class="tab-sec" style="display:none;">
-            <div class="card">
-                <h3><i class="fa-solid fa-trophy" style="color:gold;"></i> Global Points Leaderboard</h3>
-                <ol id="lBoard" style="margin-top:10px; padding-left:1.5rem;">
-                    {% for item in leaderboard %}
-                    <li>{{ item.student }} — <strong>{{ item.points }} pts</strong></li>
-                    {% endfor %}
-                </ol>
-            </div>
-        </div>
-
-        <!-- TAB: FORUM -->
-        <div id="tab-forum" class="tab-sec" style="display:none;">
-            <div class="card">
-                <h3>Ask Dr. Molouk Directly</h3>
-                <textarea placeholder="Write your question..." style="width:100%; height:80px; margin-top:10px; padding:0.5rem; border-radius:8px; border:1px solid var(--border);"></textarea>
-                <button class="btn" style="width:auto;" onclick="alert('Question sent to Dr. Molouk!')">Send Question</button>
-            </div>
-        </div>
-
     </div>
 
-    <footer>
-        <p>&copy; 2026 Dr. Molouk's Medicine Courses. All rights reserved.</p>
-        <p>Contact: <a href="mailto:Molouk08@gmail.com">Molouk08@gmail.com</a></p>
-    </footer>
+</div>
 
-    <script>
-        function closeModal() { document.getElementById('subModal').style.display = 'none'; }
-        
-        function toggleTheme() {
-            const h = document.documentElement;
-            const icon = document.getElementById('tIcon');
-            if(h.getAttribute('data-theme') === 'dark') {
-                h.setAttribute('data-theme', 'light');
-                icon.className = 'fa-solid fa-moon';
-            } else {
-                h.setAttribute('data-theme', 'dark');
-                icon.className = 'fa-solid fa-sun';
-            }
-        }
+<script>
+    let currentUser = null;
 
-        function filterYear(yr, btn) {
-            document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.course-card').forEach(c => {
-                c.style.display = (c.getAttribute('data-year') === yr) ? 'block' : 'none';
-            });
-        }
+    function showAuth(view) {
+        document.getElementById('login-card').classList.add('hidden');
+        document.getElementById('register-card').classList.add('hidden');
+        document.getElementById('reset-card').classList.add('hidden');
+        if(view === 'login') document.getElementById('login-card').classList.remove('hidden');
+        if(view === 'register') document.getElementById('register-card').classList.remove('hidden');
+        if(view === 'reset') document.getElementById('reset-card').classList.remove('hidden');
+    }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-sec').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tab).style.display = 'block';
-            event.currentTarget.classList.add('active');
-        }
-
-        function submitQuiz(score) {
-            fetch('/api/submit-quiz', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({score: score, student_name: "You"})
+    async function register() {
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-pass').value,
+                pin: document.getElementById('reg-pin').value
             })
-            .then(res => res.json())
-            .then(data => {
-                alert('Quiz Submitted! Earned: ' + data.earned_points + ' points');
-            });
+        });
+        const data = await res.json();
+        if(data.success) {
+            currentUser = data.user;
+            initPlatform();
+        } else alert(data.message);
+    }
+
+    async function login() {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-pass').value
+            })
+        });
+        const data = await res.json();
+        if(data.success) {
+            currentUser = data.user;
+            initPlatform();
+        } else alert(data.message);
+    }
+
+    async function resetPassword() {
+        const res = await fetch('/api/reset-password', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: document.getElementById('reset-email').value,
+                pin: document.getElementById('reset-pin').value,
+                new_password: document.getElementById('reset-new-pass').value
+            })
+        });
+        const data = await res.json();
+        alert(data.message);
+        if(data.success) showAuth('login');
+    }
+
+    async function logout() {
+        await fetch('/api/logout', {method: 'POST'});
+        location.reload();
+    }
+
+    function initPlatform() {
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('platform-section').classList.remove('hidden');
+        document.getElementById('logout-btn').classList.remove('hidden');
+        document.getElementById('user-greeting').innerText = `Hello, ${currentUser.name}`;
+
+        if(currentUser.is_admin) {
+            document.getElementById('admin-panel').classList.remove('hidden');
         }
 
-        function addTask() {
-            const inp = document.getElementById('tInput');
-            if(inp.value) {
-                const li = document.createElement('li');
-                li.innerText = inp.value;
-                document.getElementById('tList').appendChild(li);
-                inp.value = '';
-            }
-        }
-    </script>
+        loadContent();
+    }
+
+    async function loadContent() {
+        const res = await fetch('/api/data');
+        const data = await res.json();
+
+        // Render Subjects
+        const subjGrid = document.getElementById('subjects-grid');
+        const vSelect = document.getElementById('video-subj-select');
+        const qSelect = document.getElementById('quiz-subj-select');
+        
+        subjGrid.innerHTML = '';
+        vSelect.innerHTML = '';
+        qSelect.innerHTML = '';
+
+        data.subjects.forEach(s => {
+            subjGrid.innerHTML += `<div class="card" style="background:#eef5ff;"><h4>${s.name}</h4><p>${s.year}</p></div>`;
+            vSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            qSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+        });
+
+        // Render Videos
+        const vList = document.getElementById('videos-list');
+        vList.innerHTML = '';
+        data.videos.forEach(v => {
+            vList.innerHTML += `
+                <div>
+                    <h4>${v.title}</h4>
+                    <div class="video-container">
+                        <iframe src="${v.url}" allowfullscreen></iframe>
+                    </div>
+                </div>`;
+        });
+
+        // Render Quizzes
+        const qList = document.getElementById('quizzes-list');
+        qList.innerHTML = '';
+        data.quizzes.forEach(q => {
+            let qHtml = `<div class="card"><h4>${q.title}</h4>`;
+            q.questions.forEach((question, idx) => {
+                qHtml += `<p><b>Q${idx+1}: ${question.q}</b></p>`;
+                question.opts.forEach((opt, optIdx) => {
+                    qHtml += `<button class="quiz-opt" onclick="checkAns(${optIdx}, ${question.correct})">${opt}</button>`;
+                });
+            });
+            qHtml += `</div>`;
+            qList.innerHTML += qHtml;
+        });
+    }
+
+    function checkAns(selected, correct) {
+        if(selected === correct) alert("Correct answer! 🎉");
+        else alert("Incorrect answer. Try again!");
+    }
+
+    async function addSubject() {
+        await fetch('/api/admin/add-subject', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: document.getElementById('subj-name').value,
+                year: document.getElementById('subj-year').value
+            })
+        });
+        loadContent();
+    }
+
+    async function addVideo() {
+        await fetch('/api/admin/add-video', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                subject_id: document.getElementById('video-subj-select').value,
+                title: document.getElementById('video-title').value,
+                url: document.getElementById('video-url').value
+            })
+        });
+        loadContent();
+    }
+
+    async function addQuiz() {
+        const questions = [{
+            q: document.getElementById('q1-text').value,
+            opts: [
+                document.getElementById('q1-a').value,
+                document.getElementById('q1-b').value,
+                document.getElementById('q1-c').value,
+                document.getElementById('q1-d').value
+            ],
+            correct: parseInt(document.getElementById('q1-correct').value)
+        }];
+
+        await fetch('/api/admin/add-quiz', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                subject_id: document.getElementById('quiz-subj-select').value,
+                title: document.getElementById('quiz-title').value,
+                questions: questions
+            })
+        });
+        loadContent();
+    }
+</script>
 </body>
 </html>
